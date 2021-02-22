@@ -2,20 +2,17 @@ import React, {Suspense, useEffect} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {
     answer,
-    setBoard,
-    setBoardSize,
-    setCardPairs, setCardStyle,
-    setGame,
-    setMusicVolume,
-    setSoundsVolume
+    setLocalStorage,
 } from "./redux/game-reducer";
 import {boardSelector, cardPairSelector, getBoardSize, getGameType, getMusicVolume} from "./redux/selectors/selectors";
 import {Route, Switch} from "react-router-dom"
 import 'antd/dist/antd.css';
-//@ts-ignore
-import music from "./sounds/music.mp3"
 import {Game} from "./components/Game/Game";
 import useSound from "use-sound";
+import {GithubOutlined} from "@ant-design/icons/lib";
+//@ts-ignore
+import music from "./sounds/music.mp3"
+
 
 export type CardType = {
     content: string;
@@ -23,6 +20,7 @@ export type CardType = {
 };
 
 const Settings = React.lazy(()=> import("./components/Settings/Settings"))
+const Stats = React.lazy(()=> import("./components/Stats/Stats"))
 
 function App() {
     const dispatch = useDispatch()
@@ -37,31 +35,7 @@ function App() {
         gameType==="wait"?play():stop()
     },[play,gameType]) // eslint-disable-line
     useEffect(() => {
-        const localStorageBoard = ():string|null => localStorage.getItem("board")
-        const localStorageCardPair = ():string|null => localStorage.getItem("cardPair")
-        const localStorageGameType = ():string|null => localStorage.getItem("gameType")
-        const localStorageMusicVolume = ():string|null => localStorage.getItem("musicVolume")
-        const localStorageSoundsVolume= ():string|null => localStorage.getItem("soundsVolume")
-        const localStorageBoardSize= ():string|null => localStorage.getItem("boardSize")
-        const localStorageImageURL= ():string|null => localStorage.getItem("imgURL")
-        const lB = localStorageBoard()
-        const lT = localStorageGameType()
-        const lC = localStorageCardPair()
-        const lMV = localStorageMusicVolume()
-        const lSV = localStorageSoundsVolume()
-        const lBS = localStorageBoardSize()
-        const lMU = localStorageImageURL()
-        lC && dispatch(setCardPairs(JSON.parse(lC)))
-        lT && dispatch(setGame(JSON.parse(lT)))
-        lMV && dispatch(setMusicVolume(JSON.parse(lMV)))
-        lSV && dispatch(setSoundsVolume(JSON.parse(lSV)))
-        lMU && dispatch(setCardStyle(lMU))
-        //@ts-ignore
-        lBS && dispatch(setBoardSize(lBS))
-        lB
-            ? dispatch(setBoard(JSON.parse(lB)))
-            : dispatch(setBoard([...boardItems, ...boardItems].sort(() => 0.5 - Math.random())))
-
+       dispatch(setLocalStorage(boardItems))
     }, []) // eslint-disable-line
     useEffect(() => {
         dispatch(answer([...cardPair]))
@@ -74,11 +48,18 @@ function App() {
             <div className={"game"}>
                 <Switch>
                     <Route  path={"/settings"} render={()=><Suspense fallback={<div>Loading</div>}><Settings /></Suspense>}/>
+                    <Route  path={"/stats"} render={()=><Suspense fallback={<div>Loading</div>}><Stats /></Suspense>}/>
                     <Route  path={"/"} render={()=><Game boardItems={boardItems}/>}/>
                     <Route  path={"*"} render={()=><h1>404</h1>}/>
                 </Switch>
-
             </div>
+            <footer>
+                <a href={"https://rs.school/react/"} rel={"noreferrer"} target={"_blank"}>
+                    <img src={"https://rs.school/images/rs_school_js.svg"}  alt={"course-logo"}/>
+                </a>
+                <b>2021</b>
+                <a href={"https://github.com/ReaZzy"} rel={"noreferrer"} target={"_blank"}><GithubOutlined className={"githubSvg"}/></a>
+            </footer>
         </div>
     );
 }

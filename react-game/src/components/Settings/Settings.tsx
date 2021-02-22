@@ -1,8 +1,15 @@
 import React from "react";
 import {Button, Radio, Slider} from "antd";
 import {useDispatch, useSelector} from "react-redux";
-import {resetSettings, setBoardSize, setCardStyle, setMusicVolume, setSoundsVolume} from "../../redux/game-reducer";
-import {getBoardSize, getMusicVolume, getSoundsVolume} from "../../redux/selectors/selectors";
+import {
+    resetSettings,
+    setBoardSize,
+    setCardStyle,
+    setDifficulty,
+    setMusicVolume,
+    setSoundsVolume
+} from "../../redux/game-reducer";
+import {getBoardSize, getDifficulty, getMusicVolume, getSoundsVolume} from "../../redux/selectors/selectors";
 import {ArrowLeftOutlined} from "@ant-design/icons/lib";
 import { useHistory } from "react-router-dom";
 
@@ -12,6 +19,7 @@ const Setting: React.FC<{}> = () => {
     const soundsVolume = useSelector(getSoundsVolume)
     const boardSize = useSelector(getBoardSize)
     const history = useHistory()
+    const difficulty = useSelector(getDifficulty)
     const back = () => {
         history.goBack()
     }
@@ -40,14 +48,18 @@ const Setting: React.FC<{}> = () => {
         dispatch(setBoardSize(e.target.value))
         localStorage.setItem("boardSize", `${e.target.value}`)
     }
+    const onAfterChangeDifficulty = (e: any) => {
+        dispatch(setDifficulty(e.target.value))
+        localStorage.setItem("difficulty", `${e.target.value}`)
+    }
     return (
         <div className={`menu settings`}>
             <div className={"menu-content"}>
                 <label className={"label"}> Difficulty </label>
-                <Radio.Group defaultValue="a" buttonStyle="solid">
-                    <Radio.Button value="a">Easy</Radio.Button>
-                    <Radio.Button value="b">Normal</Radio.Button>
-                    <Radio.Button value="c">Hard</Radio.Button>
+                <Radio.Group defaultValue={difficulty} buttonStyle="solid" onChange={onAfterChangeDifficulty}>
+                    <Radio.Button value="easy">Easy</Radio.Button>
+                    <Radio.Button value="normal">Normal</Radio.Button>
+                    <Radio.Button value="hard">Hard</Radio.Button>
                 </Radio.Group>
                 <label className={"label"}> Board size </label>
                 <Radio.Group defaultValue={boardSize} buttonStyle="solid" onChange={onAfterChangeBoardSize}>
@@ -60,14 +72,14 @@ const Setting: React.FC<{}> = () => {
                 <Slider className={"slider"} defaultValue={musicVolume*100} onChange={onAfterChangeMusic}/>
                 <label className={"label"}> Sounds </label>
                 <Slider className={"slider"} defaultValue={soundsVolume*100} onChange={onAfterChangeSounds}/>
-                <label className={"label label-input"}> Upload your own card style
+                <label className={"label label-input reset"}> Upload your own card style
                 <input type="file" className={"file-input"}  onChange={loadFile}/>
                 </label>
 
                 <Button className={"reset"} onClick={()=>{dispatch(resetSettings())}} type="primary" danger>
                     Reset
                 </Button>
-                <Button className={"reset"} onClick={()=>{back()}} type="primary">
+                <Button  className={"reset"} onClick={()=>{back()}} type="primary">
                     <ArrowLeftOutlined />
                 </Button>
             </div>

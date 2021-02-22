@@ -8,8 +8,16 @@ import correctAudio from "./../sounds/correct-audio.wav"
 // @ts-ignore
 import openAudio from "./../sounds/open-sound.wav"
 
+export type GameType = {
+    key: number
+    date: string,
+    winOrLose: "win" | "lose"
+    boardSize: string
+    difficulty: string,
+    score: number,
+    time: number
+}
 
-export type boardSizeType = "small" | "normal" | "big" | "huge"
 const initialState = {
     board: [] as Array<CardType>,
     boardDisabled: false,
@@ -17,8 +25,13 @@ const initialState = {
     gameType: "wait" as "wait" | "playing" | "win" | "lose",
     musicVolume: 1,
     soundsVolume: 1,
-    boardSize: "normal" as boardSizeType,
-    imgURL: null as string|null,
+    boardSize: "normal",
+    games: [] as Array<GameType>,
+    imgURL: null as string | null,
+    difficulty: "normal",
+    time: 0,
+    score: 0,
+    highScore: 0,
 };
 type initialStateType = typeof initialState;
 
@@ -27,8 +40,7 @@ type initialStateType = typeof initialState;
 const openCardAudio = new Audio(openAudio)
 const wrongAnswerAudio = new Audio(wrongAudio)
 const correctAnswerAudio = new Audio(correctAudio)
-
-
+let [month, date, year]    = new Date().toLocaleDateString("en-US").split("/")
 
 const gameReducer = (state = initialState, action: ActionsType): initialStateType => {
     switch (action.type) {
@@ -87,6 +99,24 @@ const gameReducer = (state = initialState, action: ActionsType): initialStateTyp
         case "SET_CARD_PAIRS": {
             return {...state, cardPair: [...action.cards]}
         }
+        case "SET_DIFFICULTY": {
+            return {...state, difficulty: action.difficulty}
+        }
+        case "SET_TIMER": {
+            return {...state, time: action.time}
+        }
+        case "SET_SCORE":{
+            return {...state, score: action.score}
+        }
+        case "SET_HIGH_SCORE":{
+            return {...state, highScore: action.score}
+        }
+        case "SET_GAMES":{
+            return {...state, games: [action.game, ...state.games]}
+        }
+        case "SET_ALL_GAMES":{
+            return {...state, games: action.games}
+        }
 
         case "CLEAR_CARD_PAIR": {
             return {...state, cardPair: []}
@@ -109,6 +139,12 @@ type ActionsType =
     | setMusicVolumeType
     | setBoardSizeType
     | setCardStyleType
+    | setDifficultyType
+    | setScoreType
+    | setTimerType
+    | setHighScoreType
+    | setGamesType
+    | setAllGamesType
 
 export const openCard = (number: number): openCardType => ({
     type: "OPEN_CARD",
@@ -149,21 +185,32 @@ export const setGame = (gameType: "wait" | "playing" | "win" | "lose"): setGameT
     gameType
 })
 type setGameType = { type: "SET_GAME_TYPE", gameType: "wait" | "playing" | "win" | "lose" }
-
 export const setCardPair = (card: CardType): setCardPairType => ({type: "SET_CARD_PAIR", card})
 type setCardPairType = { type: "SET_CARD_PAIR", card: CardType }
 export const setCardPairs = (cards: Array<CardType>): setCardPairsType => ({type: "SET_CARD_PAIRS", cards})
 type setCardPairsType = { type: "SET_CARD_PAIRS", cards: Array<CardType> }
 const clearCardPair = (): clearCardPairType => ({type: "CLEAR_CARD_PAIR"})
 type clearCardPairType = { type: "CLEAR_CARD_PAIR" }
-export const setMusicVolume = (volume:number): setMusicVolumeType => ({type: "SET_MUSIC_VOLUME", volume})
-type setMusicVolumeType = { type: "SET_MUSIC_VOLUME", volume:number }
-export const setSoundsVolume = (volume:number): setSoundsVolumeType => ({type: "SET_SOUNDS_VOLUME", volume})
-type setSoundsVolumeType = { type: "SET_SOUNDS_VOLUME", volume:number  }
-export const setBoardSize = (boardSize:boardSizeType): setBoardSizeType => ({type: "SET_BOARD_SIZE", boardSize})
-type setBoardSizeType = { type: "SET_BOARD_SIZE", boardSize:boardSizeType  }
-export const setCardStyle = (imgURL: string ): setCardStyleType => ({type: "SET_CARD_STYLE", imgURL})
-type setCardStyleType = { type: "SET_CARD_STYLE", imgURL:string  }
+export const setMusicVolume = (volume: number): setMusicVolumeType => ({type: "SET_MUSIC_VOLUME", volume})
+type setMusicVolumeType = { type: "SET_MUSIC_VOLUME", volume: number }
+export const setSoundsVolume = (volume: number): setSoundsVolumeType => ({type: "SET_SOUNDS_VOLUME", volume})
+type setSoundsVolumeType = { type: "SET_SOUNDS_VOLUME", volume: number }
+export const setBoardSize = (boardSize: string): setBoardSizeType => ({type: "SET_BOARD_SIZE", boardSize})
+type setBoardSizeType = { type: "SET_BOARD_SIZE", boardSize: string }
+export const setCardStyle = (imgURL: string): setCardStyleType => ({type: "SET_CARD_STYLE", imgURL})
+type setCardStyleType = { type: "SET_CARD_STYLE", imgURL: string }
+export const setDifficulty = (difficulty: string): setDifficultyType => ({type: "SET_DIFFICULTY", difficulty})
+type setDifficultyType = { type: "SET_DIFFICULTY", difficulty: string }
+export const setTimer = (time: number): setTimerType => ({type: "SET_TIMER", time})
+type setTimerType = { type: "SET_TIMER", time: number }
+export const setScore = (score: number): setScoreType => ({type: "SET_SCORE", score})
+type setScoreType = { type: "SET_SCORE", score: number }
+export const setHighScore = (score: number): setHighScoreType => ({type: "SET_HIGH_SCORE", score})
+type setHighScoreType = { type: "SET_HIGH_SCORE", score: number }
+export const setGames = (game: GameType): setGamesType => ({type: "SET_GAMES", game})
+type setGamesType = { type: "SET_GAMES", game: GameType }
+export const setAllGames = (games: Array<GameType>): setAllGamesType => ({type: "SET_ALL_GAMES", games})
+type setAllGamesType = { type: "SET_ALL_GAMES", games: Array<GameType>}
 
 export const answer = (cardPair: Array<CardType>): ThunkAction<Promise<void>, AppStateType, unknown, ActionsType> => async (dispatch, getState) => {
 
@@ -185,6 +232,11 @@ export const answer = (cardPair: Array<CardType>): ThunkAction<Promise<void>, Ap
     const correct = () => {
         correctAnswerAudio.play()
         dispatch(setAnswers(cardPair, "correct"))
+        dispatch(setScore(game.score+2))
+        if(game.score >= game.highScore){
+            dispatch(setHighScore(game.score+2))
+            localStorage.setItem("highScore", JSON.stringify(game.score+2))
+        }
     }
 
     if (cardPair.length === 2) {
@@ -196,6 +248,7 @@ export const answer = (cardPair: Array<CardType>): ThunkAction<Promise<void>, Ap
 
     if (game.board.every((e: CardType) => e.type === "correct")) {
         dispatch(setGame("win"))
+        await dispatch(setGameToStats("win"))
     }
 
     localStorage.setItem("board", JSON.stringify(game.board.map((e: CardType) => e.type === "wrong" ? {
@@ -204,32 +257,109 @@ export const answer = (cardPair: Array<CardType>): ThunkAction<Promise<void>, Ap
     } : e)))
     localStorage.setItem("gameType", JSON.stringify(game.gameType))
     localStorage.setItem("cardPair", JSON.stringify(cardPair))
+    localStorage.setItem("score", JSON.stringify(game.score))
 }
 
-export const backToMainMenu = (boardItems: Array<CardType>): ThunkAction<Promise<void>, AppStateType, unknown, ActionsType> => async (dispatch) => {
+
+
+const backOptions = (boardItems: Array<CardType>): ThunkAction<Promise<void>, AppStateType, unknown, ActionsType> => async (dispatch, getState) => {
+    const {game} = getState()
     dispatch(setGame("wait"))
     dispatch(setCardPairs([]))
+    dispatch(setScore(0))
     dispatch(setBoard([...boardItems, ...boardItems].sort(() => 0.5 - Math.random())))
+    dispatch(setTimer(game.difficulty === "easy" ? 60 : game.difficulty === "normal" ? 50 : 30))
+    localStorage.removeItem("cardPair")
+}
+export const backToMainMenu = (boardItems: Array<CardType>): ThunkAction<Promise<void>, AppStateType, unknown, ActionsType> => async (dispatch, getState) => {
+    dispatch(backOptions(boardItems))
     localStorage.removeItem("board")
     localStorage.removeItem("gameType")
-    localStorage.removeItem("cardPair")
 }
-export const refreshBoard = (boardItems: Array<CardType>): ThunkAction<Promise<void>, AppStateType, unknown, ActionsType> => async (dispatch) => {
+export const refreshBoard = (boardItems: Array<CardType>): ThunkAction<Promise<void>, AppStateType, unknown, ActionsType> => async (dispatch, getState) => {
     openCardAudio.play()
-    dispatch(setCardPairs([]))
-    dispatch(setBoard([...boardItems, ...boardItems].sort(() => 0.5 - Math.random())))
-    localStorage.removeItem("cardPair")
+    dispatch(backOptions(boardItems))
+}
+const setGameToStats = (winOrLose: "win" | "lose"): ThunkAction<Promise<void>, AppStateType, unknown, ActionsType> => async (dispatch, getState) => {
+    const {game} = getState()
+    dispatch(setGames({
+        key: Math.random(),
+        date: `${month}/${date}/${year}`,
+        boardSize: game.boardSize,
+        difficulty: game.difficulty,
+        score: game.score,
+        winOrLose: winOrLose,
+        time: (game.difficulty === "easy" ? 60 : game.difficulty === "normal" ? 50 : 30) - game.time
+    }))
+    localStorage.setItem("games", JSON.stringify([{
+        key: Math.random(),
+        date: `${month}/${date}/${year}`,
+        boardSize: game.boardSize,
+        difficulty: game.difficulty,
+        score: game.score,
+        winOrLose: winOrLose,
+        time: (game.difficulty === "easy" ? 60 : game.difficulty === "normal" ? 50 : 30) - game.time
+    }, ...game.games]))
 }
 
-export const startGame = (boardItems:Array<CardType>): ThunkAction<Promise<void>, AppStateType, unknown, ActionsType> => async (dispatch) => {
+export const startGame = (boardItems: Array<CardType>): ThunkAction<Promise<void>, AppStateType, unknown, ActionsType> => async (dispatch, getState) => {
+    const {game} = getState()
     dispatch(setBoard([...boardItems, ...boardItems].sort(() => 0.5 - Math.random())))
     dispatch(setGame("playing"))
+    dispatch(setScore(0))
     dispatch(setCardPairs([]))
+    dispatch(setTimer(game.difficulty === "easy" ? 60 : game.difficulty === "normal" ? 50 : 30))
     localStorage.removeItem("cardPair")
 }
 export const resetSettings = (): ThunkAction<Promise<void>, AppStateType, unknown, ActionsType> => async (dispatch) => {
     dispatch(setCardStyle(""))
     localStorage.removeItem("imgURL")
+}
+export const lose = (): ThunkAction<Promise<void>, AppStateType, unknown, ActionsType> => async (dispatch) => {
+    dispatch(setGame("lose"))
+    await dispatch(setGameToStats("lose"))
+    localStorage.setItem("gameType", JSON.stringify("lose"))
+}
+
+export const setLocalStorage = (boardItems: Array<CardType>): ThunkAction<Promise<void>, AppStateType, unknown, ActionsType> => async (dispatch) => {
+    const localStorageBoard = (): string | null => localStorage.getItem("board")
+    const localStorageCardPair = (): string | null => localStorage.getItem("cardPair")
+    const localStorageGameType = (): string | null => localStorage.getItem("gameType")
+    const localStorageMusicVolume = (): string | null => localStorage.getItem("musicVolume")
+    const localStorageSoundsVolume = (): string | null => localStorage.getItem("soundsVolume")
+    const localStorageBoardSize = (): string | null => localStorage.getItem("boardSize")
+    const localStorageImageURL = (): string | null => localStorage.getItem("imgURL")
+    const localStorageDifficulty = (): string | null => localStorage.getItem("difficulty")
+    const localStorageTimer = (): string | null => localStorage.getItem("timer")
+    const localStorageScore = (): string | null => localStorage.getItem("score")
+    const localStorageHighScore = (): string | null => localStorage.getItem("highScore")
+    const localStorageGames = (): string | null => localStorage.getItem("games")
+    const lB = localStorageBoard()
+    const lT = localStorageGameType()
+    const lC = localStorageCardPair()
+    const lMV = localStorageMusicVolume()
+    const lSV = localStorageSoundsVolume()
+    const lBS = localStorageBoardSize()
+    const lMU = localStorageImageURL()
+    const lD = localStorageDifficulty()
+    const lTM = localStorageTimer()
+    const lS = localStorageScore()
+    const lHS = localStorageHighScore()
+    const lG = localStorageGames()
+    lC && dispatch(setCardPairs(JSON.parse(lC)))
+    lT && dispatch(setGame(JSON.parse(lT)))
+    lMV && dispatch(setMusicVolume(JSON.parse(lMV)))
+    lSV && dispatch(setSoundsVolume(JSON.parse(lSV)))
+    lMU && dispatch(setCardStyle(lMU))
+    lD && dispatch(setDifficulty(lD))
+    lBS && dispatch(setBoardSize(lBS))
+    lTM && dispatch(setTimer(+lTM))
+    lS && dispatch(setScore(+lS))
+    lHS && dispatch(setHighScore(+lHS))
+    lG && dispatch(setAllGames(JSON.parse(lG)))
+    lB
+        ? dispatch(setBoard(JSON.parse(lB)))
+        : dispatch(setBoard([...boardItems, ...boardItems].sort(() => 0.5 - Math.random())))
 }
 
 export default gameReducer

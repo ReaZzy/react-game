@@ -25,3 +25,18 @@ export const getBoardSize = (state:AppStateType) => {
 export const getImgURL = (state:AppStateType) => {
     return state?.game?.imgURL
 }
+export const getDifficulty = (state:AppStateType) => {
+    return state?.game?.difficulty
+}
+export const getTime = (state:AppStateType) => {
+    return state?.game?.time
+}
+export const getScore = (state:AppStateType) => {
+    return state?.game?.score
+}
+export const getHighScore = (state:AppStateType) => {
+    return state?.game?.highScore
+}
+export const getGames = (state:AppStateType) => {
+    return state?.game?.games
+}

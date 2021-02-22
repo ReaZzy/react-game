@@ -9,10 +9,11 @@ import {
     cardPairSelector,
     disabledBoardSelector,
     getBoardSize,
-    getGameType
+    getGameType, getHighScore, getScore
 } from "../../redux/selectors/selectors";
-import {ArrowLeftOutlined, CaretRightOutlined, ReloadOutlined, SettingOutlined} from "@ant-design/icons/lib";
+import {ArrowLeftOutlined, BarChartOutlined, CaretRightOutlined, ReloadOutlined, SettingOutlined} from "@ant-design/icons/lib";
 import {Link} from "react-router-dom";
+import {Timer} from "../Timer/Timer";
 
 export const Game: React.FC<{boardItems:Array<CardType>}> = ({boardItems}) => {
 
@@ -22,14 +23,17 @@ export const Game: React.FC<{boardItems:Array<CardType>}> = ({boardItems}) => {
     const board = useSelector(boardSelector)
     const cardPair = useSelector(cardPairSelector)
     const boardSize = useSelector(getBoardSize)
+    const score = useSelector(getScore)
+    const highScore = useSelector(getHighScore)
 
     return (
         <div>
             {gameType === "playing"
                 ? <div className="appContent">
                     <div className="score">
-                        <div>Current score: 14</div>
-                        <div>High score: 15</div>
+                        <Button size={"large"}>Current score: {score}</Button>
+                        <Button size={"large"}>High score: {highScore}</Button>
+                        <Timer/>
                     </div>
                     <div className={`board ${boardSize} ${disabledBoard && "disabled"}`}>
                         {board?.map((card: CardType, index: number) => {
@@ -68,7 +72,7 @@ export const Game: React.FC<{boardItems:Array<CardType>}> = ({boardItems}) => {
                             </div>
                             <div>
                                 <div className={"small-text"}>
-                                    Current score:14 | High score: 15
+                                    High score: {highScore}
                                 </div>
                             </div>
 
@@ -81,6 +85,9 @@ export const Game: React.FC<{boardItems:Array<CardType>}> = ({boardItems}) => {
                             </Button>
                             <Button type="primary" size={"large"} onClick={()=>{dispatch(backToMainMenu(boardItems))}}>
                                 <Link to={"/settings"}><SettingOutlined/></Link>
+                            </Button>
+                            <Button type="primary" size={"large"} onClick={()=>{dispatch(backToMainMenu(boardItems))}}>
+                                <Link to={"/stats"}><BarChartOutlined /></Link>
                             </Button>
                         </div>
                     </div>

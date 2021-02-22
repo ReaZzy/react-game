@@ -5,25 +5,10 @@
 body, html, .App {
     padding: 0;
     margin: 0;
-<<<<<<< HEAD
-<<<<<<< HEAD
-    overflow: auto;
-=======
-<<<<<<< HEAD
-=======
->>>>>>> 579a3195e20414d0a494d86ddaabfbc11eb1cc91
-<<<<<<< HEAD
-    overflow: auto;
-=======
     overflow-y: hidden;
     overflow-x: auto;
->>>>>>> 23254f7eb77d2197784e041e9fd9333965218f6b
-=======
->>>>>>> parent of 5ecf574... feat: add statistic
-<<<<<<< HEAD
->>>>>>> 579a319... feat: add stats
-=======
->>>>>>> 579a3195e20414d0a494d86ddaabfbc11eb1cc91
+    display: flex;
+    flex-direction: column;
 }
 .game{
     margin: auto;
@@ -95,6 +80,10 @@ body, html, .App {
     background: #4BB462;
     color: white;
 }
+.menu.lose{
+    background-color: #FF0000;
+    color: white;
+}
 .menu.wait{
     background: #ECE9E6;
     background: -webkit-linear-gradient(to right, #FFFFFF, #ECE9E6);
@@ -146,7 +135,9 @@ body, html, .App {
     display: none;
 }
 .reset{
-    width: 72%;
+    width: 100%;
+    text-align: center;
+    margin-bottom: auto;
 }
 /*  CARDS =========================================================================================================== */
 
@@ -229,9 +220,23 @@ body, html, .App {
 
 
 /*  CARDS TYPE ====================================================================================================== */
-
-
-
+footer{
+    position: absolute;
+    width: 200px;
+    display: flex;
+    align-items: center;
+    bottom: 0;
+    left: 0;
+}
+footer img {
+    width: calc(70px + (120 - 70) * ((100vw - 320px) / (1400 - 320)));
+}
+footer b{
+    font-size: calc(18px + (26 - 18) * ((100vw - 320px) / (1400 - 320)));
+}
+.githubSvg{
+    font-size: calc(18px + (26 - 18) * ((100vw - 320px) / (1400 - 320)));
+}
 /* https://css-tricks.com/snippets/css/shake-css-keyframe-animation/ */
 
 @keyframes shake {
