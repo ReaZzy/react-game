@@ -1,0 +1,270 @@
+* {
+    box-sizing: border-box;
+}
+
+body, html, .App {
+    padding: 0;
+    margin: 0;
+<<<<<<< HEAD
+<<<<<<< HEAD
+    overflow: auto;
+=======
+<<<<<<< HEAD
+=======
+>>>>>>> 579a3195e20414d0a494d86ddaabfbc11eb1cc91
+<<<<<<< HEAD
+    overflow: auto;
+=======
+    overflow-y: hidden;
+    overflow-x: auto;
+>>>>>>> 23254f7eb77d2197784e041e9fd9333965218f6b
+=======
+>>>>>>> parent of 5ecf574... feat: add statistic
+<<<<<<< HEAD
+>>>>>>> 579a319... feat: add stats
+=======
+>>>>>>> 579a3195e20414d0a494d86ddaabfbc11eb1cc91
+}
+.game{
+    margin: auto;
+    position: relative;
+}
+.App{
+    height: 100vh;
+    display: flex;
+}
+.score{
+    display: flex;
+    justify-content: space-between;
+    font-size: calc(32px + (38 - 32) * ((100vw - 320px) / (1400 - 320)));
+    margin: 10px;
+}
+.board {
+    margin: auto;
+    display: grid;
+}
+
+.board.small {
+    gap: 10px;
+    width: calc(300px + (600 - 300) * ((100vw - 320px) / (1400 - 320)));
+    height: calc(300px + (600 - 300) * ((100vw - 320px) / (1400 - 320)));
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr;
+}
+.board.normal {
+    gap: 10px;
+    width: calc(300px + (600 - 300) * ((100vw - 320px) / (1400 - 320)));
+    height: calc(300px + (600 - 300) * ((100vw - 320px) / (1400 - 320)));
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr 1fr;
+}
+.board.big {
+    gap: 10px;
+    width: calc(300px + (600 - 300) * ((100vw - 320px) / (1400 - 320)));
+    height: calc(300px + (600 - 300) * ((100vw - 320px) / (1400 - 320)));
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr 1fr 1fr;
+}
+.board.huge {
+    gap: 10px;
+    width: calc(300px + (600 - 300) * ((100vw - 320px) / (1400 - 320)));
+    height: calc(300px + (600 - 300) * ((100vw - 320px) / (1400 - 320)));
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr 1fr 1fr 1fr;
+}
+.reset-button{
+    width: 100%;
+    margin-top: 10px;
+}
+
+/*  MENU ============================================================================================================ */
+.menu{
+    animation: menuAnim 1s;
+    -webkit-box-shadow: 0 0 37px -1px rgba(0,0,0,0.6);
+    box-shadow: 0 0 37px -1px rgba(0,0,0,0.6);
+}
+.text{
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+}
+.small-text{
+    font-size: calc(18px + (26 - 18) * ((100vw - 320px) / (1400 - 320)))
+}
+.menu.win{
+    background: #4BB462;
+    color: white;
+}
+.menu.wait{
+    background: #ECE9E6;
+    background: -webkit-linear-gradient(to right, #FFFFFF, #ECE9E6);
+    background: linear-gradient(to right, #FFFFFF, #ECE9E6);
+
+}
+.menu {
+    width: calc(300px + (700 - 300) * ((100vw - 320px) / (1400 - 320)));
+    height: calc(300px + (700 - 300) * ((100vw - 320px) / (1400 - 320)));
+}
+
+.settings{
+    width: calc(300px + (700 - 300) * ((100vw - 320px) / (1400 - 320)));
+    height: calc(300px + (700 - 300) * ((100vw - 320px) / (1400 - 320)));
+}
+.menu-content{
+    flex-direction: column;
+    width: 100%;
+    height: 95%;
+    align-items: center;
+    display: flex;
+    justify-content: center;
+}
+.end-text{
+    display: flex;
+    justify-content: center;
+    font-size: calc(28px + (32 - 28) * ((100vw - 320px) / (1400 - 320)))
+}
+.menu-content button{
+    margin: 0 10px 0 10px;
+}
+
+/*  SETTINGS ======================================================================================================== */
+.slider{
+    width: 70%;
+}
+.label{
+    font-size: calc(28px + (32 - 28) * ((100vw - 320px) / (1400 - 320)))
+}
+/*  INPUT =========================================================================================================== */
+.label-input{
+    cursor: pointer;
+    background-color: #1890ff;
+    padding: 10px;
+    color: #f8f8f8;
+    font-size: calc(24px + (28 - 24) * ((100vw - 320px) / (1400 - 320)))
+}
+.input-file, input[type=file]{
+    display: none;
+}
+.reset{
+    width: 72%;
+}
+/*  CARDS =========================================================================================================== */
+
+.card {
+    transition: 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: calc(32px + (42 - 32) * ((100vw - 320px) / (1400 - 320)));
+}
+
+.card.open .content, .card.wrong .content, .card.correct .content {
+    transform: rotateY(180deg);
+}
+.card.closed{
+    cursor: pointer;
+}
+.content {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transform-style: preserve-3d;
+    transition: 0.6s cubic-bezier(.17,.67,.38,1.57) all;
+}
+
+.card .front, .card .back {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    backface-visibility: hidden;
+}
+
+.card.correct .front {
+    background: #4BB462;
+    color: #f8f8f8;
+    transform: rotateY(180deg);
+}
+
+.card.wrong .front {
+    background-color: #FF0000;
+    color: #f8f8f8;
+    animation: shake 1.3s cubic-bezier(.36,.07,.19,.97) both;
+    transform: translate3d(0, 0, 0);
+    perspective: 1000px;
+}
+.card.open .front {
+    background: #AFCFEA;
+    transform: rotateY(180deg);
+}
+
+.card .back {
+    overflow: hidden;
+    border: 1px solid black;
+    font-size: 100px;
+    transition: 0.3s ease all;
+}
+.card .back img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.card .back:hover {
+    background: #188ffd;
+    padding: 1px;
+    border: none;
+    color: black;
+    transform: scale(1.02);
+}
+.disabled .card {
+    opacity: 0.7;
+    pointer-events: none;
+}
+
+
+/*  CARDS TYPE ====================================================================================================== */
+
+
+
+/* https://css-tricks.com/snippets/css/shake-css-keyframe-animation/ */
+
+@keyframes shake {
+    10%, 90% {
+        transform: translate3d(-1px, 0, 0)  rotateY(180deg);
+    }
+
+    20%, 80% {
+        transform: translate3d(2px, 0, 0)  rotateY(180deg);
+    }
+
+    30%, 50%, 70% {
+        transform: translate3d(-4px, 0, 0)  rotateY(180deg);
+    }
+
+    40%, 60% {
+        transform: translate3d(4px, 0, 0)  rotateY(180deg);
+    }
+}
+/* ================================================================ */
+
+@keyframes menuAnim {
+    0%{
+        opacity: 0;
+    }
+    100%{
+        opacity: 1;
+    }
+}
+
+@media (max-width: 800px){
+    .settings{
+        height: 100%;
+        width: 100%;
+    }
+}
