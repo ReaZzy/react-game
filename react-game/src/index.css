@@ -136,7 +136,6 @@ body, html, .App {
 /*  INPUT =========================================================================================================== */
 .label-input{
     cursor: pointer;
-    background-color: #1890ff;
     padding: 10px;
     color: #f8f8f8;
     font-size: calc(24px + (28 - 24) * ((100vw - 320px) / (1400 - 320)))

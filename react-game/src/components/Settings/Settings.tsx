@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import {Button, Radio, Slider, Typography} from "antd";
 import {useDispatch, useSelector} from "react-redux";
 import {
@@ -15,6 +15,7 @@ import { useHistory } from "react-router-dom";
 import Title from "antd/lib/typography/Title";
 
 const Setting: React.FC<{}> = () => {
+    const [error, setError] = useState<boolean>(false)
     const dispatch = useDispatch()
     const musicVolume = useSelector(getMusicVolume)
     const soundsVolume = useSelector(getSoundsVolume)
@@ -24,16 +25,27 @@ const Setting: React.FC<{}> = () => {
     const back = () => {
         history.goBack()
     }
-
+    const setImg = (base64data:any) => {
+        localStorage.setItem("imgURL", base64data)
+        setError(false)
+    }
+    const setErrorFunc = () => {
+        setError(true)
+        setTimeout(()=>{
+            setError(false)
+        }, 2000)
+    }
     const loadFile = (e: any) => {
         const reader = new FileReader();
         reader.readAsDataURL(e.target?.files[0])
-        reader.onloadend = function() {
+        reader.onloadend = function() { // https://stackoverflow.com/questions/18650168/convert-blob-to-base64
             const base64data = reader.result;
             //@ts-ignore
             dispatch(setCardStyle(base64data))
             //@ts-ignore
-            localStorage.setItem("imgURL", base64data) // https://stackoverflow.com/questions/18650168/convert-blob-to-base64
+            reader.size >= 1048576
+                ? setImg(base64data)
+                : setErrorFunc()
         }
     }
 
@@ -72,7 +84,8 @@ const Setting: React.FC<{}> = () => {
                 <Slider className={"slider"} value={musicVolume*100} defaultValue={musicVolume*100} onChange={onAfterChangeMusic}/>
                 <label className={"label"}> Sounds </label>
                 <Slider className={"slider"} value={soundsVolume*100} defaultValue={soundsVolume*100} onChange={onAfterChangeSounds}/>
-                <label className={"label label-input reset"}> Upload your own card style
+                <label style={{backgroundColor: error? "#FF0000":"#1890ff"}} className={"label label-input reset"}>
+                    {error? "Max image size is 1MB" : "Upload your card style" }
                 <input type="file" className={"file-input"}  onChange={loadFile}/>
                 </label>
 
