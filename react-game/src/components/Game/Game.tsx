@@ -1,4 +1,4 @@
-import React  from "react";
+import React from "react";
 import {Card} from "../Card/Card";
 import {Button} from "antd";
 import {backToMainMenu, refreshBoard, startGame} from "../../redux/game-reducer";

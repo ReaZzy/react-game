@@ -1,5 +1,5 @@
 import React from "react";
-import {Button, Radio, Slider} from "antd";
+import {Button, Radio, Slider, Typography} from "antd";
 import {useDispatch, useSelector} from "react-redux";
 import {
     resetSettings,
@@ -12,6 +12,7 @@ import {
 import {getBoardSize, getDifficulty, getMusicVolume, getSoundsVolume} from "../../redux/selectors/selectors";
 import {ArrowLeftOutlined} from "@ant-design/icons/lib";
 import { useHistory } from "react-router-dom";
+import Title from "antd/lib/typography/Title";
 
 const Setting: React.FC<{}> = () => {
     const dispatch = useDispatch()
@@ -23,6 +24,7 @@ const Setting: React.FC<{}> = () => {
     const back = () => {
         history.goBack()
     }
+
     const loadFile = (e: any) => {
         const reader = new FileReader();
         reader.readAsDataURL(e.target?.files[0])
@@ -46,35 +48,58 @@ const Setting: React.FC<{}> = () => {
     }
     const onAfterChangeBoardSize = (e: any) => {
         dispatch(setBoardSize(e.target.value))
-        localStorage.setItem("boardSize", `${e.target.value}`)
     }
     const onAfterChangeDifficulty = (e: any) => {
         dispatch(setDifficulty(e.target.value))
-        localStorage.setItem("difficulty", `${e.target.value}`)
     }
     return (
         <div className={`menu settings`}>
             <div className={"menu-content"}>
                 <label className={"label"}> Difficulty </label>
-                <Radio.Group defaultValue={difficulty} buttonStyle="solid" onChange={onAfterChangeDifficulty}>
+                <Radio.Group defaultValue={difficulty} value={difficulty} buttonStyle="solid" onChange={onAfterChangeDifficulty}>
                     <Radio.Button value="easy">Easy</Radio.Button>
                     <Radio.Button value="normal">Normal</Radio.Button>
                     <Radio.Button value="hard">Hard</Radio.Button>
                 </Radio.Group>
                 <label className={"label"}> Board size </label>
-                <Radio.Group defaultValue={boardSize} buttonStyle="solid" onChange={onAfterChangeBoardSize}>
+                <Radio.Group defaultValue={boardSize} value={boardSize} buttonStyle="solid" onChange={onAfterChangeBoardSize}>
                     <Radio.Button value="small">Small</Radio.Button>
                     <Radio.Button value="normal">Normal</Radio.Button>
                     <Radio.Button value="big">Big</Radio.Button>
                     <Radio.Button value="huge">Huge</Radio.Button>
                 </Radio.Group>
                 <label className={"label"}> Music </label>
-                <Slider className={"slider"} defaultValue={musicVolume*100} onChange={onAfterChangeMusic}/>
+                <Slider className={"slider"} value={musicVolume*100} defaultValue={musicVolume*100} onChange={onAfterChangeMusic}/>
                 <label className={"label"}> Sounds </label>
-                <Slider className={"slider"} defaultValue={soundsVolume*100} onChange={onAfterChangeSounds}/>
+                <Slider className={"slider"} value={soundsVolume*100} defaultValue={soundsVolume*100} onChange={onAfterChangeSounds}/>
                 <label className={"label label-input reset"}> Upload your own card style
                 <input type="file" className={"file-input"}  onChange={loadFile}/>
                 </label>
+
+                <div className={"hotkeys"}>
+                    <Title level={2}>Hotkeys</Title>
+                    <div>
+                        <Button type={"dashed"} size={"large"}>CTRL + Z</Button>
+                        <Typography.Text keyboard>Back to homepage</Typography.Text>
+                    </div>
+                    <div>
+                        <Button type={"dashed"} size={"large"}>CTRL + X</Button>
+                        <Typography.Text keyboard>Settings</Typography.Text>
+                    </div>
+                    <div>
+                        <Button type={"dashed"} size={"large"}>CTRL + C</Button>
+                        <Typography.Text keyboard>Stats</Typography.Text>
+                    </div>
+                    <div>
+                        <Button type={"dashed"} size={"large"}>CTRL + V</Button>
+                        <Typography.Text keyboard>Refresh your board</Typography.Text>
+                    </div>
+                    <div>
+                        <Button type={"dashed"} size={"large"}>CTRL + ENTER</Button>
+                        <Typography.Text keyboard>Start game</Typography.Text>
+                    </div>
+
+                </div>
 
                 <Button className={"reset"} onClick={()=>{dispatch(resetSettings())}} type="primary" danger>
                     Reset

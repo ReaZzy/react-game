@@ -26,11 +26,11 @@ export const Card: React.FC<CardComponentType> = (
     }
 
     return (
-        <div className={`card ${card.type}`}
+        <div className={`noselect card ${card.type}`}
                onClick={() => handleClick(index)}>
             <div className={"content"}>
                 <div className={"front"}> {card.type !== "closed" && `${card.content}`} </div>
-                <div className={"back"}> {imgURL && <img src={`${imgURL}`} alt={"card"} id={"output"}/>} </div>
+                <div className={"back noselect"}> {imgURL && <img src={`${imgURL}`} alt={"card"} id={"output"}/>} </div>
             </div>
 
         </div>

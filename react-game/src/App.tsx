@@ -1,17 +1,23 @@
 import React, {Suspense, useEffect} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {
-    answer,
-    setLocalStorage,
+    answer, backToMainMenu, refreshBoard,
+    setLocalStorage, startGame,
 } from "./redux/game-reducer";
-import {boardSelector, cardPairSelector, getBoardSize, getGameType, getMusicVolume} from "./redux/selectors/selectors";
-import {Route, Switch} from "react-router-dom"
-import 'antd/dist/antd.css';
+import {
+    boardSelector,
+    cardPairSelector,
+    getBoardSize,
+    getGameType,
+    getMusicVolume
+} from "./redux/selectors/selectors";
+import {Route, Switch, useHistory} from "react-router-dom"
 import {Game} from "./components/Game/Game";
 import useSound from "use-sound";
 import {GithubOutlined} from "@ant-design/icons/lib";
 //@ts-ignore
 import music from "./sounds/music.mp3"
+import hotkeys from "hotkeys-js";
 
 
 export type CardType = {
@@ -29,7 +35,7 @@ function App() {
     const cardPair = useSelector(cardPairSelector)
     const musicVolume = useSelector(getMusicVolume)
     const boardSize = useSelector(getBoardSize)
-
+    const history = useHistory()
     const [play, {stop}] = useSound(music, {volume: Number(localStorage.getItem("musicVolume") || musicVolume) , interrupt: true})
     useEffect(()=>{
         gameType==="wait"?play():stop()
@@ -40,8 +46,35 @@ function App() {
     useEffect(() => {
         dispatch(answer([...cardPair]))
     }, [board]) // eslint-disable-line
+    useEffect(()=>{
+        const toSettings = (path:string) => {
+            dispatch(backToMainMenu(boardItems))
+            history.push(path)
+        }
+        const startGameHotKey = () => {
+            dispatch(startGame(boardItems))
+            history.push("/")
+        }
+        hotkeys('ctrl+x,ctrl+z,ctrl+c,ctrl+enter,ctrl+v',{keyup: true},function (event, handler){
+            switch (handler.key) {
+                case 'ctrl+x': event.type === 'keyup' &&  toSettings("settings")
+                    break;
+                case 'ctrl+z': event.type === 'keyup' && toSettings("")
+                    break;
+                case 'ctrl+c': event.type === 'keyup' && toSettings("stats")
+                    break;
+                case 'ctrl+enter': event.type === 'keyup' && startGameHotKey()
+                    break;
+                case 'ctrl+v': event.type === 'keyup' && dispatch(refreshBoard(boardItems))
+                    break;
+                default: break;
+            }
+        })
+    },[boardSize]) //eslint-disable-line
+
+
     const boardItemsCount = boardSize === "small" ? 4 : boardSize === "normal" ? 8 : boardSize === "big" ? 10 : 18
-    const boardItems: Array<CardType> = Array(boardItemsCount).fill(0).map((e:number,index:number) => ( {content:`${index}`, type:"closed"}))
+    const boardItems: Array<CardType> = Array(boardItemsCount).fill(0).map((e:number,index:number) => ({content:`${index}`, type:"closed"}))
 
     return (
         <div className="App">

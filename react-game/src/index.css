@@ -5,16 +5,28 @@
 body, html, .App {
     padding: 0;
     margin: 0;
-    overflow-y: hidden;
-    overflow-x: auto;
+    overflow: hidden;
     display: flex;
     flex-direction: column;
 }
+
+.noselect {
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+    -khtml-user-select: none; /* Konqueror HTML */
+    -moz-user-select: none; /* Old versions of Firefox */
+    -ms-user-select: none; /* Internet Explorer/Edge */
+    user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome, Edge, Opera and Firefox */
+} /* https://stackoverflow.com/questions/826782/how-to-disable-text-selection-highlighting */
+
+
 .game{
     margin: auto;
     position: relative;
 }
 .App{
+    overflow-x: auto;
     height: 100vh;
     display: flex;
 }
@@ -63,11 +75,6 @@ body, html, .App {
 }
 
 /*  MENU ============================================================================================================ */
-.menu{
-    animation: menuAnim 1s;
-    -webkit-box-shadow: 0 0 37px -1px rgba(0,0,0,0.6);
-    box-shadow: 0 0 37px -1px rgba(0,0,0,0.6);
-}
 .text{
     display: flex;
     justify-content: center;
@@ -93,19 +100,22 @@ body, html, .App {
 .menu {
     width: calc(300px + (700 - 300) * ((100vw - 320px) / (1400 - 320)));
     height: calc(300px + (700 - 300) * ((100vw - 320px) / (1400 - 320)));
+    animation: menuAnim 1s;
+    -webkit-box-shadow: 0 0 37px -1px rgba(0,0,0,0.6);
+    box-shadow: 0 0 37px -1px rgba(0,0,0,0.6);
 }
 
 .settings{
+    height: 100%;
     width: calc(300px + (700 - 300) * ((100vw - 320px) / (1400 - 320)));
-    height: calc(300px + (700 - 300) * ((100vw - 320px) / (1400 - 320)));
 }
 .menu-content{
     flex-direction: column;
     width: 100%;
-    height: 95%;
     align-items: center;
     display: flex;
     justify-content: center;
+    height: 100%;
 }
 .end-text{
     display: flex;
@@ -138,6 +148,19 @@ body, html, .App {
     width: 100%;
     text-align: center;
     margin-bottom: auto;
+}
+/*  HOTKEYS ========================================================================================================= */
+.hotkeys{
+    margin: 10px;
+    display: flex;
+    flex-direction: column;
+}
+.hotkeys button{
+    width: 150px;
+}
+.hotkeys h2 {
+    width: 100%;
+    text-align: center;
 }
 /*  CARDS =========================================================================================================== */
 
@@ -266,10 +289,14 @@ footer b{
         opacity: 1;
     }
 }
-
 @media (max-width: 800px){
-    .settings{
-        height: 100%;
+    .game{
+        width: 100%;
+    }
+    .menu{
+        width: 100%;
+    }
+    .App{
         width: 100%;
     }
 }

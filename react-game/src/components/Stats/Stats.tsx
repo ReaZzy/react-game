@@ -43,7 +43,7 @@ const Stats: React.FC<{}> = () => {
                 {/*@ts-ignore*/}
                 <Table columns={columns} dataSource={data} pagination={{ position: ["none", "none"] }}/>
                 <Button style={
-                    {width:"100%", position:"absolute", bottom:"0"}
+                    {width:"100%"}
                 } className={"reset"} onClick={()=>{back()}} type="primary">
                     <ArrowLeftOutlined />
                 </Button>
