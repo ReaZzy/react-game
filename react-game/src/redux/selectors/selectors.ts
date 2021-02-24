@@ -40,3 +40,6 @@ export const getHighScore = (state:AppStateType) => {
 export const getGames = (state:AppStateType) => {
     return state?.game?.games
 }
+export const getAutoPlay = (state:AppStateType) => {
+    return state?.game?.autoPlay
+}

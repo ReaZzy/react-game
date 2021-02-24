@@ -1,15 +1,21 @@
 import React, {useState} from "react";
-import {Button, Radio, Slider, Typography} from "antd";
+import {Button, Radio, Slider, Switch, Typography} from "antd";
 import {useDispatch, useSelector} from "react-redux";
 import {
-    resetSettings,
+    resetSettings, setAutoPlay,
     setBoardSize,
     setCardStyle,
     setDifficulty,
     setMusicVolume,
     setSoundsVolume
 } from "../../redux/game-reducer";
-import {getBoardSize, getDifficulty, getMusicVolume, getSoundsVolume} from "../../redux/selectors/selectors";
+import {
+    getAutoPlay,
+    getBoardSize,
+    getDifficulty,
+    getMusicVolume,
+    getSoundsVolume
+} from "../../redux/selectors/selectors";
 import {ArrowLeftOutlined} from "@ant-design/icons/lib";
 import { useHistory } from "react-router-dom";
 import Title from "antd/lib/typography/Title";
@@ -22,6 +28,7 @@ const Setting: React.FC<{}> = () => {
     const boardSize = useSelector(getBoardSize)
     const history = useHistory()
     const difficulty = useSelector(getDifficulty)
+    const autoPlay = useSelector(getAutoPlay)
     const back = () => {
         history.goBack()
     }
@@ -64,6 +71,10 @@ const Setting: React.FC<{}> = () => {
     const onAfterChangeDifficulty = (e: any) => {
         dispatch(setDifficulty(e.target.value))
     }
+
+    const onChangeAutoPlay = (e:boolean) => {
+        dispatch(setAutoPlay(e))
+    }
     return (
         <div className={`menu settings`}>
             <div className={"menu-content"}>
@@ -88,7 +99,8 @@ const Setting: React.FC<{}> = () => {
                     {error? "Max image size is 1MB" : "Upload your card style" }
                 <input type="file" className={"file-input"}  onChange={loadFile}/>
                 </label>
-
+                <label className={"label"}> Autoplay </label>
+                <Switch checked={autoPlay} onChange={onChangeAutoPlay} />
                 <div className={"hotkeys"}>
                     <Title level={2}>Hotkeys</Title>
                     <div>

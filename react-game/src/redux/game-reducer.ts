@@ -36,6 +36,7 @@ const initialState = {
     time: 0,
     score: 0,
     highScore: 0,
+    autoPlay: false
 };
 type initialStateType = typeof initialState;
 
@@ -46,7 +47,7 @@ const wrongAnswerAudio = new Audio(wrongAudio)
 const correctAnswerAudio = new Audio(correctAudio)
 const winGameAudio = new Audio(winAudio)
 const loseGameAudio = new Audio(loseAudio)
-let [month, date, year]    = new Date().toLocaleDateString("en-US").split("/")
+let [month, date, year] = new Date().toLocaleDateString("en-US").split("/")
 
 const gameReducer = (state = initialState, action: ActionsType): initialStateType => {
     switch (action.type) {
@@ -114,19 +115,21 @@ const gameReducer = (state = initialState, action: ActionsType): initialStateTyp
         case "SET_TIMER": {
             return {...state, time: action.time}
         }
-        case "SET_SCORE":{
+        case "SET_SCORE": {
             return {...state, score: action.score}
         }
-        case "SET_HIGH_SCORE":{
+        case "SET_HIGH_SCORE": {
             return {...state, highScore: action.score}
         }
-        case "SET_GAMES":{
+        case "SET_GAMES": {
             return {...state, games: [action.game, ...state.games]}
         }
-        case "SET_ALL_GAMES":{
+        case "SET_ALL_GAMES": {
             return {...state, games: action.games}
         }
-
+        case "SET_AUTO_PLAY": {
+            return {...state, autoPlay: action.autoPlay}
+        }
         case "CLEAR_CARD_PAIR": {
             return {...state, cardPair: []}
         }
@@ -154,6 +157,8 @@ type ActionsType =
     | setHighScoreType
     | setGamesType
     | setAllGamesType
+    | setAutoPlayType
+
 
 export const openCard = (number: number): openCardType => ({
     type: "OPEN_CARD",
@@ -219,7 +224,10 @@ type setHighScoreType = { type: "SET_HIGH_SCORE", score: number }
 export const setGames = (game: GameType): setGamesType => ({type: "SET_GAMES", game})
 type setGamesType = { type: "SET_GAMES", game: GameType }
 export const setAllGames = (games: Array<GameType>): setAllGamesType => ({type: "SET_ALL_GAMES", games})
-type setAllGamesType = { type: "SET_ALL_GAMES", games: Array<GameType>}
+type setAllGamesType = { type: "SET_ALL_GAMES", games: Array<GameType> }
+export const setAutoPlay = (autoPlay: boolean): setAutoPlayType => ({type: "SET_AUTO_PLAY", autoPlay})
+type setAutoPlayType = { type: "SET_AUTO_PLAY", autoPlay: boolean }
+
 
 export const answer = (cardPair: Array<CardType>): ThunkAction<Promise<void>, AppStateType, unknown, ActionsType> => async (dispatch, getState) => {
 
@@ -240,13 +248,13 @@ export const answer = (cardPair: Array<CardType>): ThunkAction<Promise<void>, Ap
             dispatch(disableBoard(false))
         }, 1000)
     }
-    const  correct =  async () => {
+    const correct = async () => {
         await correctAnswerAudio.play()
         dispatch(setAnswers(cardPair, "correct"))
-        dispatch(setScore(game.score+2))
-        if(game.score >= game.highScore){
-            dispatch(setHighScore(game.score+2))
-            localStorage.setItem("highScore", JSON.stringify(game.score+2))
+        dispatch(setScore(game.score + 2))
+        if (game.score >= game.highScore) {
+            dispatch(setHighScore(game.score + 2))
+            localStorage.setItem("highScore", JSON.stringify(game.score + 2))
         }
     }
 
@@ -272,21 +280,21 @@ export const answer = (cardPair: Array<CardType>): ThunkAction<Promise<void>, Ap
 }
 
 
-
 const backOptions = (boardItems: Array<CardType>): ThunkAction<Promise<void>, AppStateType, unknown, ActionsType> => async (dispatch, getState) => {
     const {game} = getState()
     dispatch(setCardPairs([]))
     dispatch(setScore(0))
-    dispatch(setBoard([...boardItems, ...boardItems].sort(() => 0.5 - Math.random())))
     dispatch(setTimer(game.difficulty === "easy" ? 60 : game.difficulty === "normal" ? 50 : 30))
     localStorage.removeItem("cardPair")
 }
 export const backToMainMenu = (boardItems: Array<CardType>): ThunkAction<Promise<void>, AppStateType, unknown, ActionsType> => async (dispatch, getState) => {
+    dispatch(setBoard([...boardItems, ...boardItems].sort(() => 0.5 - Math.random())))
     dispatch(backOptions(boardItems))
     dispatch(setGame("wait"))
     localStorage.removeItem("board")
 }
 export const refreshBoard = (boardItems: Array<CardType>): ThunkAction<Promise<void>, AppStateType, unknown, ActionsType> => async (dispatch, getState) => {
+    dispatch(setBoard([...boardItems, ...boardItems].sort(() => 0.5 - Math.random())))
     openCardAudio.play()
     dispatch(backOptions(boardItems))
 }
@@ -314,6 +322,7 @@ const setGameToStats = (winOrLose: "win" | "lose"): ThunkAction<Promise<void>, A
 
 export const startGame = (boardItems: Array<CardType>): ThunkAction<Promise<void>, AppStateType, unknown, ActionsType> => async (dispatch) => {
     dispatch(setGame("playing"))
+    dispatch(setBoard([...boardItems, ...boardItems].sort(() => 0.5 - Math.random())))
     dispatch(backOptions(boardItems))
 }
 export const resetSettings = (): ThunkAction<Promise<void>, AppStateType, unknown, ActionsType> => async (dispatch) => {
@@ -330,6 +339,36 @@ export const lose = (): ThunkAction<Promise<void>, AppStateType, unknown, Action
     dispatch(setGame("lose"))
     await dispatch(setGameToStats("lose"))
     await loseGameAudio.play()
+}
+
+
+export const startAutoPlay = (boardItems: Array<CardType>): ThunkAction<Promise<void>, AppStateType, unknown, ActionsType> => async (dispatch, getState) => {
+    const {game} = getState()
+    if(game.autoPlay){
+        dispatch(setGame("playing"))
+        const boardCopy = [...game.board]
+        const answer = boardCopy.map((e, ind) => {
+            return [...boardCopy.reduce(
+                (res: any, el, index) =>
+                    (
+                        el.content === `${ind}` ? res.push(index) && res : res
+                    )
+                , []
+            )]
+        })
+        let asd = 0
+        for (let i of answer.flat()) {
+            asd++
+            setTimeout(() => {
+                if (game.board[i].type === "closed") {
+                    dispatch(setCardPair(game.board[i]))
+                    dispatch(openCard(i))
+                }
+
+            }, asd * 600)
+        }
+        dispatch(backOptions(boardItems))
+    }
 }
 
 export const setLocalStorage = (boardItems: Array<CardType>): ThunkAction<Promise<void>, AppStateType, unknown, ActionsType> => async (dispatch) => {

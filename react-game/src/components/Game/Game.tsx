@@ -1,21 +1,27 @@
 import React from "react";
 import {Card} from "../Card/Card";
 import {Button} from "antd";
-import {backToMainMenu, refreshBoard, startGame} from "../../redux/game-reducer";
+import {backToMainMenu, refreshBoard, startAutoPlay, startGame} from "../../redux/game-reducer";
 import {CardType} from "../../App";
 import {useDispatch, useSelector} from "react-redux";
 import {
     boardSelector,
     cardPairSelector,
-    disabledBoardSelector,
+    disabledBoardSelector, getAutoPlay,
     getBoardSize,
     getGameType, getHighScore, getScore
 } from "../../redux/selectors/selectors";
-import {ArrowLeftOutlined, BarChartOutlined, CaretRightOutlined, ReloadOutlined, SettingOutlined} from "@ant-design/icons/lib";
+import {
+    ArrowLeftOutlined,
+    BarChartOutlined,
+    CaretRightOutlined,
+    ReloadOutlined,
+    SettingOutlined
+} from "@ant-design/icons/lib";
 import {Link} from "react-router-dom";
 import {Timer} from "../Timer/Timer";
 
-export const Game: React.FC<{boardItems:Array<CardType>}> = ({boardItems}) => {
+export const Game: React.FC<{ boardItems: Array<CardType> }> = ({boardItems}) => {
 
     const disabledBoard = useSelector(disabledBoardSelector)
     const dispatch = useDispatch()
@@ -24,8 +30,13 @@ export const Game: React.FC<{boardItems:Array<CardType>}> = ({boardItems}) => {
     const cardPair = useSelector(cardPairSelector)
     const boardSize = useSelector(getBoardSize)
     const score = useSelector(getScore)
+    const autoPlay = useSelector(getAutoPlay)
     const highScore = useSelector(getHighScore)
 
+    const refreshAutoPlay = () => {
+        dispatch(backToMainMenu(boardItems))
+        dispatch(startAutoPlay(boardItems))
+    }
     return (
         <div>
             {gameType === "playing"
@@ -35,7 +46,7 @@ export const Game: React.FC<{boardItems:Array<CardType>}> = ({boardItems}) => {
                         <Button size={"large"}>High score: {highScore}</Button>
                         <Timer/>
                     </div>
-                    <div className={`board ${boardSize} ${disabledBoard && "disabled"}`}>
+                    <div className={`board ${boardSize} ${disabledBoard && "disabled"} ${autoPlay && "autoPlay"}`}>
                         {board?.map((card: CardType, index: number) => {
                             return (
                                 <Card cardPair={cardPair}
@@ -46,16 +57,18 @@ export const Game: React.FC<{boardItems:Array<CardType>}> = ({boardItems}) => {
                             );
                         })}
                     </div>
-                    <Button onClick={() => {
+                    {!autoPlay && <> <Button onClick={() => {
                         dispatch(refreshBoard(boardItems))
                     }} className={"reset-button"} type="primary" size={"large"}>
                         <ReloadOutlined/>
                     </Button>
-                    <Button onClick={() => {
-                        dispatch(backToMainMenu(boardItems))
-                    }} className={"reset-button"} type="primary" size={"large"}>
-                        <ArrowLeftOutlined/>
-                    </Button>
+                        <Button onClick={() => {
+                            dispatch(backToMainMenu(boardItems))
+                        }} className={"reset-button"} type="primary" size={"large"}>
+                            <ArrowLeftOutlined/>
+                        </Button>
+                    </>
+                    }
                 </div>
 
                 : <div className={`menu ${gameType} ${boardSize}`}>
@@ -79,15 +92,21 @@ export const Game: React.FC<{boardItems:Array<CardType>}> = ({boardItems}) => {
                         </div>
                         <div>
                             <Button type="primary" size={"large"} onClick={() => {
-                                dispatch(startGame(boardItems))
+                                autoPlay
+                                    ? refreshAutoPlay()
+                                    : dispatch(startGame(boardItems))
                             }}>
                                 {gameType !== "wait" ? "Play again" : "Play"} <CaretRightOutlined/>
                             </Button>
-                            <Button type="primary" size={"large"} onClick={()=>{dispatch(backToMainMenu(boardItems))}}>
+                            <Button type="primary" size={"large"} onClick={() => {
+                                dispatch(backToMainMenu(boardItems))
+                            }}>
                                 <Link to={"/settings"}><SettingOutlined/></Link>
                             </Button>
-                            <Button type="primary" size={"large"} onClick={()=>{dispatch(backToMainMenu(boardItems))}}>
-                                <Link to={"/stats"}><BarChartOutlined /></Link>
+                            <Button type="primary" size={"large"} onClick={() => {
+                                dispatch(backToMainMenu(boardItems))
+                            }}>
+                                <Link to={"/stats"}><BarChartOutlined/></Link>
                             </Button>
                         </div>
                     </div>

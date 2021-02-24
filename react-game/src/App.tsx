@@ -2,11 +2,11 @@ import React, {Suspense, useEffect} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {
     answer, backToMainMenu, refreshBoard,
-    setLocalStorage, startGame,
+    setLocalStorage, startAutoPlay, startGame,
 } from "./redux/game-reducer";
 import {
     boardSelector,
-    cardPairSelector,
+    cardPairSelector, getAutoPlay,
     getBoardSize,
     getGameType,
     getMusicVolume
@@ -23,6 +23,7 @@ import hotkeys from "hotkeys-js";
 export type CardType = {
     content: string;
     type: "open" | "closed" | "wrong" | "correct";
+    id: number
 };
 
 const Settings = React.lazy(()=> import("./components/Settings/Settings"))
@@ -36,6 +37,7 @@ function App() {
     const musicVolume = useSelector(getMusicVolume)
     const boardSize = useSelector(getBoardSize)
     const history = useHistory()
+    const autoPlay = useSelector(getAutoPlay)
     const [play, {stop}] = useSound(music, {volume: Number(localStorage.getItem("musicVolume") || musicVolume) , interrupt: true})
     useEffect(()=>{
         gameType==="wait"?play():stop()
@@ -45,14 +47,19 @@ function App() {
     }, []) // eslint-disable-line
     useEffect(() => {
         dispatch(answer([...cardPair]))
-    }, [board]) // eslint-disable-line
+    }, [board, cardPair]) // eslint-disable-line
     useEffect(()=>{
+        const refreshAutoPlay = () => {
+            dispatch(backToMainMenu(boardItems))
+            dispatch(startAutoPlay(boardItems))
+        }
         const toSettings = (path:string) => {
             dispatch(backToMainMenu(boardItems))
             history.push(path)
         }
         const startGameHotKey = () => {
-            dispatch(startGame(boardItems))
+            console.log(autoPlay)
+            autoPlay ? refreshAutoPlay() : dispatch(startGame(boardItems))
             history.push("/")
         }
         hotkeys('ctrl+x,ctrl+z,ctrl+c,ctrl+enter,ctrl+v',{keyup: true},function (event, handler){
@@ -65,16 +72,16 @@ function App() {
                     break;
                 case 'ctrl+enter': event.type === 'keyup' && startGameHotKey()
                     break;
-                case 'ctrl+v': event.type === 'keyup' && dispatch(refreshBoard(boardItems))
+                case 'ctrl+v': event.type === 'keyup' && !autoPlay && dispatch(refreshBoard(boardItems))
                     break;
                 default: break;
             }
         })
-    },[boardSize]) //eslint-disable-line
+    },[boardSize, autoPlay]) //eslint-disable-line
 
 
     const boardItemsCount = boardSize === "small" ? 4 : boardSize === "normal" ? 8 : boardSize === "big" ? 10 : 18
-    const boardItems: Array<CardType> = Array(boardItemsCount).fill(0).map((e:number,index:number) => ({content:`${index}`, type:"closed"}))
+    const boardItems: Array<CardType> = Array(boardItemsCount).fill(0).map((e:number,index:number) => ({content:`${index}`, type:"closed", id:index}))
 
     return (
         <div className="App">
