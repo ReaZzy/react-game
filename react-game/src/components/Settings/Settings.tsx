@@ -35,6 +35,7 @@ const Setting: React.FC<{}> = () => {
     const setImg = (base64data:any) => {
         localStorage.setItem("imgURL", base64data)
         setError(false)
+        dispatch(setCardStyle(base64data))
     }
     const setErrorFunc = () => {
         setError(true)
@@ -44,15 +45,15 @@ const Setting: React.FC<{}> = () => {
     }
     const loadFile = (e: any) => {
         const reader = new FileReader();
-        reader.readAsDataURL(e.target?.files[0])
+        if(e.target.files[0]){
+            reader.readAsDataURL(e.target.files[0]);
+        }
+        reader.onerror= function() {console.log("error")}
         reader.onloadend = function() { // https://stackoverflow.com/questions/18650168/convert-blob-to-base64
             const base64data = reader.result;
-            //@ts-ignore
-            dispatch(setCardStyle(base64data))
-            //@ts-ignore
-            reader.size >= 1048576
-                ? setImg(base64data)
-                : setErrorFunc()
+            e.target?.files[0].size >= 1000000
+                ? setErrorFunc()
+                : setImg(base64data)
         }
     }
 

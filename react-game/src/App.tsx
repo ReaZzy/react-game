@@ -58,7 +58,6 @@ function App() {
             history.push(path)
         }
         const startGameHotKey = () => {
-            console.log(autoPlay)
             autoPlay ? refreshAutoPlay() : dispatch(startGame(boardItems))
             history.push("/")
         }
