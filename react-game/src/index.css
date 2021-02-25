@@ -20,10 +20,19 @@ body, html, .App {
                                   supported by Chrome, Edge, Opera and Firefox */
 } /* https://stackoverflow.com/questions/826782/how-to-disable-text-selection-highlighting */
 
-
+.fullScreen {
+    position: absolute;
+    left: 0;
+    top: 0;
+}
+.fullScreen button{
+    width: 100%;
+    height: 100%;
+    font-size: calc(32px + (38 - 32) * ((100vw - 320px) / (1400 - 320)));
+}
 .game{
     margin: auto;
-    position: relative;
+    background-color: white;
 }
 .App{
     overflow-x: auto;
@@ -104,7 +113,13 @@ body, html, .App {
     -webkit-box-shadow: 0 0 37px -1px rgba(0,0,0,0.6);
     box-shadow: 0 0 37px -1px rgba(0,0,0,0.6);
 }
-
+.game:fullscreen{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
 .settings{
     height: 100%;
     width: calc(300px + (700 - 300) * ((100vw - 320px) / (1400 - 320)));
