@@ -356,8 +356,9 @@ export const startAutoPlay = (boardItems: Array<CardType>): ThunkAction<Promise<
                 , []
             )]
         })
+        const answerShuffled = [...answer].sort(() => 0.5 - Math.random())
         let asd = 0
-        for (let i of answer.flat()) {
+        for (let i of answerShuffled.flat()) {
             asd++
             setTimeout(() => {
                 if (game.board[i].type === "closed") {
