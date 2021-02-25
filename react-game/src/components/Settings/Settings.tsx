@@ -17,7 +17,7 @@ import {
     getSoundsVolume
 } from "../../redux/selectors/selectors";
 import {ArrowLeftOutlined} from "@ant-design/icons/lib";
-import { useHistory } from "react-router-dom";
+import {useHistory} from "react-router-dom";
 import Title from "antd/lib/typography/Title";
 
 const Setting: React.FC<{}> = () => {
@@ -32,24 +32,26 @@ const Setting: React.FC<{}> = () => {
     const back = () => {
         history.goBack()
     }
-    const setImg = (base64data:any) => {
+    const setImg = (base64data: any) => {
         localStorage.setItem("imgURL", base64data)
         setError(false)
         dispatch(setCardStyle(base64data))
     }
     const setErrorFunc = () => {
         setError(true)
-        setTimeout(()=>{
+        setTimeout(() => {
             setError(false)
         }, 2000)
     }
     const loadFile = (e: any) => {
         const reader = new FileReader();
-        if(e.target.files[0]){
+        if (e.target.files[0]) {
             reader.readAsDataURL(e.target.files[0]);
         }
-        reader.onerror= function() {console.log("error")}
-        reader.onloadend = function() { // https://stackoverflow.com/questions/18650168/convert-blob-to-base64
+        reader.onerror = function () {
+            console.log("error")
+        }
+        reader.onloadend = function () { // https://stackoverflow.com/questions/18650168/convert-blob-to-base64
             const base64data = reader.result;
             e.target?.files[0].size >= 1000000
                 ? setErrorFunc()
@@ -59,12 +61,12 @@ const Setting: React.FC<{}> = () => {
 
 
     const onAfterChangeMusic = (value: number) => {
-        dispatch(setMusicVolume(value/100))
-        localStorage.setItem("musicVolume", `${value/100}`)
+        dispatch(setMusicVolume(value / 100))
+        localStorage.setItem("musicVolume", `${value / 100}`)
     }
     const onAfterChangeSounds = (value: number) => {
-        dispatch(setSoundsVolume(value/100))
-        localStorage.setItem("soundsVolume", `${value/100}`)
+        dispatch(setSoundsVolume(value / 100))
+        localStorage.setItem("soundsVolume", `${value / 100}`)
     }
     const onAfterChangeBoardSize = (e: any) => {
         dispatch(setBoardSize(e.target.value))
@@ -73,35 +75,41 @@ const Setting: React.FC<{}> = () => {
         dispatch(setDifficulty(e.target.value))
     }
 
-    const onChangeAutoPlay = (e:boolean) => {
+    const onChangeAutoPlay = (e: boolean) => {
         dispatch(setAutoPlay(e))
     }
     return (
         <div className={`menu settings`}>
             <div className={"menu-content"}>
                 <label className={"label"}> Difficulty </label>
-                <Radio.Group defaultValue={difficulty} value={difficulty} buttonStyle="solid" onChange={onAfterChangeDifficulty}>
+                <Radio.Group className={"settings-button"} defaultValue={difficulty} value={difficulty}
+                             buttonStyle="solid" onChange={onAfterChangeDifficulty}>
                     <Radio.Button value="easy">Easy</Radio.Button>
                     <Radio.Button value="normal">Normal</Radio.Button>
                     <Radio.Button value="hard">Hard</Radio.Button>
                 </Radio.Group>
                 <label className={"label"}> Board size </label>
-                <Radio.Group defaultValue={boardSize} value={boardSize} buttonStyle="solid" onChange={onAfterChangeBoardSize}>
+                <Radio.Group className={"settings-button"} defaultValue={boardSize} value={boardSize}
+                             buttonStyle="solid" onChange={onAfterChangeBoardSize}>
                     <Radio.Button value="small">Small</Radio.Button>
                     <Radio.Button value="normal">Normal</Radio.Button>
                     <Radio.Button value="big">Big</Radio.Button>
                     <Radio.Button value="huge">Huge</Radio.Button>
                 </Radio.Group>
                 <label className={"label"}> Music </label>
-                <Slider className={"slider"} value={musicVolume*100} defaultValue={musicVolume*100} onChange={onAfterChangeMusic}/>
+                <Slider className={"slider"} value={musicVolume * 100} defaultValue={musicVolume * 100}
+                        onChange={onAfterChangeMusic}/>
                 <label className={"label"}> Sounds </label>
-                <Slider className={"slider"} value={soundsVolume*100} defaultValue={soundsVolume*100} onChange={onAfterChangeSounds}/>
-                <label style={{backgroundColor: error? "#FF0000":"#1890ff"}} className={"label label-input reset"}>
-                    {error? "Max image size is 1MB" : "Upload your card style" }
-                <input type="file" className={"file-input"}  onChange={loadFile}/>
+                <Slider className={"slider"} value={soundsVolume * 100} defaultValue={soundsVolume * 100}
+                        onChange={onAfterChangeSounds}/>
+                <label style={{backgroundColor: error ? "#FF0000" : "#1890ff"}} className={"label label-input reset"}>
+                    {error ? "Max image size is 1MB" : "Upload your card style"}
+                    <input type="file" className={"file-input"} onChange={loadFile}/>
                 </label>
-                <label className={"label"}> Autoplay </label>
-                <Switch checked={autoPlay} onChange={onChangeAutoPlay} />
+                <div style={{display:"flex"}}>
+                    <label className={"label"}> Autoplay </label>
+                    <Switch style={{marginTop:"10px"}} checked={autoPlay} onChange={onChangeAutoPlay}/>
+                </div>
                 <div className={"hotkeys"}>
                     <Title level={2}>Hotkeys</Title>
                     <div>
@@ -127,11 +135,15 @@ const Setting: React.FC<{}> = () => {
 
                 </div>
 
-                <Button className={"reset"} onClick={()=>{dispatch(resetSettings())}} type="primary" danger>
+                <Button className={"reset"} onClick={() => {
+                    dispatch(resetSettings())
+                }} type="primary" danger>
                     Reset
                 </Button>
-                <Button  className={"reset"} onClick={()=>{back()}} type="primary">
-                    <ArrowLeftOutlined />
+                <Button className={"reset"} onClick={() => {
+                    back()
+                }} type="primary">
+                    <ArrowLeftOutlined/>
                 </Button>
             </div>
         </div>

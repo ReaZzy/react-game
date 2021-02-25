@@ -58,14 +58,14 @@ body, html, .App {
 .board.big {
     gap: 10px;
     width: calc(300px + (600 - 300) * ((100vw - 320px) / (1400 - 320)));
-    height: calc(300px + (600 - 300) * ((100vw - 320px) / (1400 - 320)));
+    height: calc(300px + (500 - 300) * ((100vw - 320px) / (1400 - 320)));
     grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
     grid-template-rows: 1fr 1fr 1fr 1fr 1fr;
 }
 .board.huge {
     gap: 10px;
     width: calc(300px + (600 - 300) * ((100vw - 320px) / (1400 - 320)));
-    height: calc(300px + (600 - 300) * ((100vw - 320px) / (1400 - 320)));
+    height: calc(300px + (500 - 300) * ((100vw - 320px) / (1400 - 320)));
     grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
     grid-template-rows: 1fr 1fr 1fr 1fr 1fr 1fr;
 }
@@ -98,8 +98,8 @@ body, html, .App {
 
 }
 .menu {
-    width: calc(300px + (700 - 300) * ((100vw - 320px) / (1400 - 320)));
-    height: calc(300px + (700 - 300) * ((100vw - 320px) / (1400 - 320)));
+    width: calc(300px + (600 - 300) * ((100vw - 320px) / (1400 - 320)));
+    height: calc(300px + (600 - 300) * ((100vw - 320px) / (1400 - 320)));
     animation: menuAnim 1s;
     -webkit-box-shadow: 0 0 37px -1px rgba(0,0,0,0.6);
     box-shadow: 0 0 37px -1px rgba(0,0,0,0.6);
@@ -110,6 +110,7 @@ body, html, .App {
     width: calc(300px + (700 - 300) * ((100vw - 320px) / (1400 - 320)));
 }
 .menu-content{
+    line-height: 36px;
     flex-direction: column;
     width: 100%;
     align-items: center;
@@ -300,5 +301,11 @@ footer b{
     }
     .App{
         width: 100%;
+    }
+}
+
+@media (max-height: 750px) {
+    .hotkeys{
+
     }
 }
