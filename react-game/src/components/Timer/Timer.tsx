@@ -5,7 +5,7 @@ import {lose, setTimer} from "../../redux/game-reducer";
 import {Button} from "antd";
 import { ClockCircleOutlined } from "@ant-design/icons";
 
-export const Timer:React.FC<{}> = () => {
+export const Timer:React.FC<{}> = React.memo(() => {
     const time = useSelector(getTime)
     const dispatch = useDispatch()
     useEffect(()=>{
@@ -28,4 +28,4 @@ export const Timer:React.FC<{}> = () => {
             <ClockCircleOutlined /> {time}
         </Button>
     )
-}
+})

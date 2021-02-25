@@ -5,7 +5,7 @@ import {getGames} from "../../redux/selectors/selectors";
 import {ArrowLeftOutlined} from "@ant-design/icons/lib";
 import { useHistory } from "react-router-dom";
 
-const Stats: React.FC<{}> = () => {
+const Stats: React.FC<{}> = React.memo(() => {
     const history = useHistory()
     const back = () => {history.goBack()}
     const columns = [
@@ -51,6 +51,6 @@ const Stats: React.FC<{}> = () => {
 
         </div>
     )
-}
+})
 
 export default Stats

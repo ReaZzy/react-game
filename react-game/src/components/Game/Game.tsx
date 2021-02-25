@@ -21,7 +21,7 @@ import {
 import {Link} from "react-router-dom";
 import {Timer} from "../Timer/Timer";
 
-export const Game: React.FC<{ boardItems: Array<CardType> }> = ({boardItems}) => {
+export const Game: React.FC<{ boardItems: Array<CardType> }> = React.memo(({boardItems}) => {
 
     const disabledBoard = useSelector(disabledBoardSelector)
     const dispatch = useDispatch()
@@ -115,4 +115,4 @@ export const Game: React.FC<{ boardItems: Array<CardType> }> = ({boardItems}) =>
         </div>
 
     )
-}
+})

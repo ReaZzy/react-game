@@ -12,7 +12,7 @@ type CardComponentType = {
 
 
 
-export const Card: React.FC<CardComponentType> = (
+export const Card: React.FC<CardComponentType> = React.memo((
     {card, index}
     ) => {
     const dispatch = useDispatch()
@@ -35,4 +35,4 @@ export const Card: React.FC<CardComponentType> = (
 
         </div>
     )
-}
+})

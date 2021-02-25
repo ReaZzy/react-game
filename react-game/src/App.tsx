@@ -29,7 +29,7 @@ export type CardType = {
 const Settings = React.lazy(()=> import("./components/Settings/Settings"))
 const Stats = React.lazy(()=> import("./components/Stats/Stats"))
 
-function App() {
+const App:React.FC<{}> = React.memo(() => {
     const dispatch = useDispatch()
     const gameType = useSelector(getGameType)
     const board = useSelector(boardSelector)
@@ -101,6 +101,6 @@ function App() {
             </footer>
         </div>
     );
-}
+})
 
 export default App;
