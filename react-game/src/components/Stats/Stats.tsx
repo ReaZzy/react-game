@@ -38,7 +38,7 @@ const Stats: React.FC<{}> = React.memo(() => {
     const data = useSelector(getGames)
 
     return (
-        <div className={`menu settings`} style={{overflow:"auto"}}>
+        <div className={`menu settings stats`} style={{overflow:"auto"}}>
             <div >
                 {/*@ts-ignore*/}
                 <Table columns={columns} dataSource={data} pagination={{ position: ["none", "none"] }}/>
