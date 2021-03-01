@@ -48,8 +48,8 @@ body, html, .App {
 .board {
     margin: auto;
     display: grid;
-    width: calc(300px + (600 - 300) * ((100vw - 320px) / (1400 - 320)));
-    height: calc(300px + (600 - 300) * ((100vw - 320px) / (1400 - 320)));
+    width: calc(300px + (500 - 300) * ((100vw - 320px) / (1400 - 320)));
+    height: calc(300px + (500 - 300) * ((100vw - 320px) / (1400 - 320)));
 }
 
 .board.small {
@@ -100,8 +100,8 @@ body, html, .App {
     background: linear-gradient(to right, #FFFFFF, #ECE9E6);
 }
 .menu {
-    width: calc(300px + (600 - 300) * ((100vw - 320px) / (1400 - 320)));
-    height: calc(300px + (600 - 300) * ((100vw - 320px) / (1400 - 320)));
+    width: calc(300px + (540 - 300) * ((100vw - 320px) / (1400 - 320)));
+    height: calc(300px + (540 - 300) * ((100vw - 320px) / (1400 - 320)));
     animation: menuAnim 1s;
     -webkit-box-shadow: 0 0 37px -1px rgba(0,0,0,0.6);
     box-shadow: 0 0 37px -1px rgba(0,0,0,0.6);
@@ -185,7 +185,7 @@ body, html, .App {
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: calc(32px + (42 - 32) * ((100vw - 320px) / (1400 - 320)));
+    font-size: calc(32px + (34 - 32) * ((100vw - 320px) / (1400 - 320)));
 }
 
 .card.open .content, .card.wrong .content, .card.correct .content {
@@ -309,6 +309,9 @@ footer b{
     .menu{
         width: 100%;
     }
+    .game{
+        width: 100%;
+    }
 }
 
 @media (max-height: 750px) {
@@ -324,12 +327,15 @@ footer b{
         display: flex;
         flex-direction: column;
     }
-    .board,
-    .menu.win,
-    .menu.lose,
-    .menu.wait {
+    .board{
         width: 275px;
         height: 275px;
+    }
+    .menu.win,
+    .menu.lose,
+    .menu.wait{
+        width: 320px;
+        height: 320px;
     }
     .stats{
         width: 100%;
