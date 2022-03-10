@@ -1,0 +1,345 @@
+* {
+    box-sizing: border-box;
+}
+
+body, html, .App {
+    padding: 0;
+    margin: 0;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.noselect {
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+    -khtml-user-select: none; /* Konqueror HTML */
+    -moz-user-select: none; /* Old versions of Firefox */
+    -ms-user-select: none; /* Internet Explorer/Edge */
+    user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome, Edge, Opera and Firefox */
+} /* https://stackoverflow.com/questions/826782/how-to-disable-text-selection-highlighting */
+
+.fullScreen {
+    position: absolute;
+    left: 0;
+    top: 0;
+}
+.fullScreen button{
+    width: 100%;
+    height: 100%;
+    font-size: calc(32px + (38 - 32) * ((100vw - 320px) / (1400 - 320)));
+}
+.game{
+    margin: auto;
+    background-color: white;
+}
+.App{
+    overflow-x: auto;
+    height: 100vh;
+    display: flex;
+}
+.score{
+    display: flex;
+    justify-content: space-between;
+    font-size: calc(32px + (38 - 32) * ((100vw - 320px) / (1400 - 320)));
+    margin: 10px;
+}
+.board {
+    margin: auto;
+    display: grid;
+    width: calc(300px + (500 - 300) * ((100vw - 320px) / (1400 - 320)));
+    height: calc(300px + (500 - 300) * ((100vw - 320px) / (1400 - 320)));
+}
+
+.board.small {
+    gap: 10px;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr;
+}
+.board.normal {
+    gap: 10px;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr 1fr;
+}
+.board.big {
+    gap: 10px;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr 1fr 1fr;
+}
+.board.huge {
+    gap: 10px;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr 1fr 1fr 1fr;
+}
+.reset-button{
+    width: 100%;
+    margin-top: 10px;
+}
+
+/*  MENU ============================================================================================================ */
+.text{
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+}
+.small-text{
+    font-size: calc(18px + (26 - 18) * ((100vw - 320px) / (1400 - 320)))
+}
+.menu.win{
+    background: #4BB462;
+    color: white;
+}
+.menu.lose{
+    background-color: #FF0000;
+    color: white;
+}
+.menu.wait{
+    background: #ECE9E6;
+    background: -webkit-linear-gradient(to right, #FFFFFF, #ECE9E6);
+    background: linear-gradient(to right, #FFFFFF, #ECE9E6);
+}
+.menu {
+    width: calc(300px + (540 - 300) * ((100vw - 320px) / (1400 - 320)));
+    height: calc(300px + (540 - 300) * ((100vw - 320px) / (1400 - 320)));
+    animation: menuAnim 1s;
+    -webkit-box-shadow: 0 0 37px -1px rgba(0,0,0,0.6);
+    box-shadow: 0 0 37px -1px rgba(0,0,0,0.6);
+}
+.game:fullscreen{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.settings{
+    height: 100%;
+    width: calc(300px + (700 - 300) * ((100vw - 320px) / (1400 - 320)));
+}
+.settings-buttons{
+    text-align: center;
+}
+
+.menu-content{
+    line-height: 36px;
+    flex-direction: column;
+    width: 100%;
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    height: 100%;
+}
+.end-text{
+    display: flex;
+    justify-content: center;
+    font-size: calc(28px + (32 - 28) * ((100vw - 320px) / (1400 - 320)))
+}
+.menu-content button{
+    margin: 0 10px 0 10px;
+}
+
+.autoPlay{
+    pointer-events: none;
+}
+/*  SETTINGS ======================================================================================================== */
+.slider{
+    width: 70%;
+}
+.label{
+    font-size: calc(24px + (28 - 24) * ((100vw - 320px) / (1400 - 320)))
+}
+/*  INPUT =========================================================================================================== */
+.label-input{
+    cursor: pointer;
+    padding: 10px;
+    color: #f8f8f8;
+    font-size: calc(24px + (28 - 24) * ((100vw - 320px) / (1400 - 320)))
+}
+.input-file, input[type=file]{
+    display: none;
+}
+.reset{
+    width: 100%;
+    text-align: center;
+    margin-bottom: auto;
+}
+/*  HOTKEYS ========================================================================================================= */
+.hotkeys{
+    margin: 10px;
+    display: flex;
+    flex-direction: column;
+    display: block;
+}
+.hotkeys button{
+    width: 150px;
+}
+.hotkeys h2 {
+    width: 100%;
+    text-align: center;
+}
+/*  CARDS =========================================================================================================== */
+
+.card {
+    transition: 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: calc(32px + (34 - 32) * ((100vw - 320px) / (1400 - 320)));
+}
+
+.card.open .content, .card.wrong .content, .card.correct .content {
+    transform: rotateY(180deg);
+}
+.card.closed{
+    cursor: pointer;
+}
+.content {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transform-style: preserve-3d;
+    transition: 0.6s cubic-bezier(.17,.67,.38,1.57) all;
+}
+
+.card .front, .card .back {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    backface-visibility: hidden;
+}
+
+.card.correct .front {
+    background: #4BB462;
+    color: #f8f8f8;
+    transform: rotateY(180deg);
+}
+
+.card.wrong .front {
+    background-color: #FF0000;
+    color: #f8f8f8;
+    animation: shake 1.3s cubic-bezier(.36,.07,.19,.97) both;
+    transform: translate3d(0, 0, 0);
+    perspective: 1000px;
+}
+.card.open .front {
+    background: #AFCFEA;
+    transform: rotateY(180deg);
+}
+
+.card .back {
+    overflow: hidden;
+    border: 1px solid black;
+    font-size: 100px;
+    transition: 0.3s ease all;
+}
+.card .back img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.card .back:hover {
+    background: #188ffd;
+    padding: 1px;
+    border: none;
+    color: black;
+    transform: scale(1.02);
+}
+.disabled .card {
+    opacity: 0.7;
+    pointer-events: none;
+}
+
+
+/*  CARDS TYPE ====================================================================================================== */
+footer{
+    position: absolute;
+    width: 200px;
+    display: flex;
+    align-items: center;
+    bottom: 0;
+    left: 0;
+}
+footer img {
+    width: calc(70px + (120 - 70) * ((100vw - 320px) / (1400 - 320)));
+}
+footer b{
+    font-size: calc(18px + (26 - 18) * ((100vw - 320px) / (1400 - 320)));
+}
+.githubSvg{
+    font-size: calc(18px + (26 - 18) * ((100vw - 320px) / (1400 - 320)));
+}
+/* https://css-tricks.com/snippets/css/shake-css-keyframe-animation/ */
+
+@keyframes shake {
+    10%, 90% {
+        transform: translate3d(-1px, 0, 0)  rotateY(180deg);
+    }
+
+    20%, 80% {
+        transform: translate3d(2px, 0, 0)  rotateY(180deg);
+    }
+
+    30%, 50%, 70% {
+        transform: translate3d(-4px, 0, 0)  rotateY(180deg);
+    }
+
+    40%, 60% {
+        transform: translate3d(4px, 0, 0)  rotateY(180deg);
+    }
+}
+/* ================================================================ */
+
+@keyframes menuAnim {
+    0%{
+        opacity: 0;
+    }
+    100%{
+        opacity: 1;
+    }
+}
+@media (max-width: 800px){
+    .menu{
+        width: 100%;
+    }
+    .game{
+        width: 100%;
+    }
+}
+
+@media (max-height: 750px) {
+    .hotkeys{
+        display: none;
+    }
+    .settings-buttons{
+        width: 80%;
+        justify-content: space-between;
+        display: flex;
+    }
+    .settings-buttons .settings-button{
+        display: flex;
+        flex-direction: column;
+    }
+    .board{
+        width: 275px;
+        height: 275px;
+    }
+    .menu.win,
+    .menu.lose,
+    .menu.wait{
+        width: 320px;
+        height: 320px;
+    }
+    .stats{
+        width: 100%;
+        height: 60%;
+    }
+
+}
